@@ -100,10 +100,6 @@ public class EntityCrystal extends EntityItemHighlighted implements EntityStarli
              int max = (stack.getItem() instanceof ItemCelestialCrystal ||
                     stack.getItem() instanceof ItemTunedCelestialCrystal) ?
                     CrystalProperties.MAX_SIZE_CELESTIAL : CrystalProperties.MAX_SIZE_ROCK;
-            int grow = rand.nextInt(90) + 40;
-            max = Math.min(prop.getSize() + grow, max);
-            CrystalProperties.applyCrystalProperties(stack,
-                    new CrystalProperties(max, prop.getPurity(), prop.getCollectiveCapability()));
             if(Config.canCrystalGrowthYieldDuplicates && prop.getSize() >= max && rand.nextInt(6) == 0) {
                 ItemStack newStack = (stack.getItem() instanceof ItemCelestialCrystal ||
                         stack.getItem() instanceof ItemTunedCelestialCrystal) ?
@@ -111,8 +107,7 @@ public class EntityCrystal extends EntityItemHighlighted implements EntityStarli
                 CrystalProperties newProp = new CrystalProperties(
                         rand.nextInt(100) + 20,
                         Math.min(prop.getPurity() + rand.nextInt(10), 100),
-                        rand.nextInt(40) + 30,
-                        0);
+                        rand.nextInt(40) + 30);
                 CrystalProperties.applyCrystalProperties(newStack, newProp);
                 ItemUtils.dropItemNaturally(world, posX, posY, posZ, newStack);
                 CrystalProperties.applyCrystalProperties(stack,
