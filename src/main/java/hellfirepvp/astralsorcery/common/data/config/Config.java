@@ -47,6 +47,7 @@ public class Config {
     @Sync public static boolean craftingLiqCrystalGrowth = true;
     @Sync public static boolean craftingLiqCrystalToolGrowth = true;
     @Sync public static boolean craftingLiqCelestialCrystalForm = true;
+    @Sync public static boolean canCrystalGrowthYieldDuplicates = true;
 
     public static boolean enableRetroGen = false;
 
