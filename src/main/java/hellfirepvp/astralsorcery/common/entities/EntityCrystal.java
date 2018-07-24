@@ -96,6 +96,7 @@ public class EntityCrystal extends EntityItemHighlighted implements EntityStarli
         List<Entity> foundItems = world.getEntitiesInAABBexcluding(this, boxCraft.offset(posX, posY, posZ).expandXyz(0.1), EntityUtils.selectItemClassInstaceof(ItemRockCrystalBase.class));
         if(foundItems.size() <= 0) {
             ItemStack stack = getEntityItem();
+            CrystalProperties prop = CrystalProperties.getCrystalProperties(stack);
              int max = (stack.getItem() instanceof ItemCelestialCrystal ||
                     stack.getItem() instanceof ItemTunedCelestialCrystal) ?
                     CrystalProperties.MAX_SIZE_CELESTIAL : CrystalProperties.MAX_SIZE_ROCK;
