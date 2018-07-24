@@ -112,7 +112,7 @@ public class EntityCrystal extends EntityItemHighlighted implements EntityStarli
                 ItemUtils.dropItemNaturally(world, posX, posY, posZ, newStack);
                 CrystalProperties.applyCrystalProperties(stack,
                         new CrystalProperties(
-                                rand.nextInt(300) + 100,
+                                rand.nextInt((max - 100)) + 100,
                                 prop.getPurity(),
                                 rand.nextInt(40) + 30));
             } else {
