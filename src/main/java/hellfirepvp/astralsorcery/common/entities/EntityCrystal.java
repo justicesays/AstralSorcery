@@ -92,30 +92,11 @@ public class EntityCrystal extends EntityItemHighlighted implements EntityStarli
 
     private void increaseSize() {
         world.setBlockToAir(getPosition());
-        List<Entity> foundItems = world.getEntitiesInAABBexcluding(this, boxCraft.offset(posX, posY, posZ).grow(0.1), EntityUtils.selectItemClassInstaceof(ItemRockCrystalBase.class));
+        List<Entity> foundItems = world.getEntitiesInAABBexcluding(this, boxCraft.offset(posX, posY, posZ).expandXyz(0.1), EntityUtils.selectItemClassInstaceof(ItemRockCrystalBase.class));
         if(foundItems.size() <= 0) {
-            ItemStack stack = getItem();
+            ItemStack stack = getEntityItem();
             CrystalProperties prop = CrystalProperties.getCrystalProperties(stack);
             int max = CrystalProperties.getMaxSize(stack);
-            if(prop.getFracturation() > 0) {
-                int frac = prop.getFracturation();
-                int cut = prop.getCollectiveCapability();
-                if(frac >= 90 && cut >= 100 && frac >= cut - 10 && rand.nextBoolean()) {
-                    cut++;
-                }
-                int purity = prop.getPurity();
-                if(frac >= 90 && purity >= 100 && frac >= purity - 10 && rand.nextBoolean()) {
-                    purity++;
-                }
-                CrystalProperties newProp = new CrystalProperties(
-                        prop.getSize(),
-                        purity,
-                        cut,
-                        Math.max(0, frac - 25 - rand.nextInt(30)),
-                        prop.getSizeOverride());
-                CrystalProperties.applyCrystalProperties(stack, newProp);
-                return;
-            }
             if(Config.canCrystalGrowthYieldDuplicates && prop.getSize() >= max && rand.nextInt(6) == 0) {
                 ItemStack newStack = (stack.getItem() instanceof ItemCelestialCrystal ||
                         stack.getItem() instanceof ItemTunedCelestialCrystal) ?
@@ -128,19 +109,16 @@ public class EntityCrystal extends EntityItemHighlighted implements EntityStarli
                          prop.getSizeOverride());
                 CrystalProperties.applyCrystalProperties(newStack, newProp);
                 ItemUtils.dropItemNaturally(world, posX, posY, posZ, newStack);
-
                 CrystalProperties.applyCrystalProperties(stack,
                         new CrystalProperties(
                                 rand.nextInt(300) + 100,
                                 prop.getPurity(),
-                                rand.nextInt(40) + 30,
-                                prop.getFracturation(),
-                                prop.getSizeOverride()));
+                                rand.nextInt(40) + 30));
             } else {
                 int grow = rand.nextInt(90) + 40;
                 max = Math.min(prop.getSize() + grow, max);
                 CrystalProperties.applyCrystalProperties(stack,
-                        new CrystalProperties(max, prop.getPurity(), prop.getCollectiveCapability(), prop.getFracturation(), prop.getSizeOverride()));
+                        new CrystalProperties(max, prop.getPurity(), prop.getCollectiveCapability()));
             }
         }
     }
