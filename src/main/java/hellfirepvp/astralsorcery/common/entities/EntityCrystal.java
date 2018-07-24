@@ -17,6 +17,7 @@ import hellfirepvp.astralsorcery.common.item.crystal.ItemCelestialCrystal;
 import hellfirepvp.astralsorcery.common.item.crystal.ItemTunedCelestialCrystal;
 import hellfirepvp.astralsorcery.common.item.crystal.base.ItemRockCrystalBase;
 import hellfirepvp.astralsorcery.common.util.EntityUtils;
+import hellfirepvp.astralsorcery.common.util.ItemUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -95,8 +96,13 @@ public class EntityCrystal extends EntityItemHighlighted implements EntityStarli
         List<Entity> foundItems = world.getEntitiesInAABBexcluding(this, boxCraft.offset(posX, posY, posZ).expandXyz(0.1), EntityUtils.selectItemClassInstaceof(ItemRockCrystalBase.class));
         if(foundItems.size() <= 0) {
             ItemStack stack = getEntityItem();
-            CrystalProperties prop = CrystalProperties.getCrystalProperties(stack);
-            int max = CrystalProperties.getMaxSize(stack);
+             int max = (stack.getItem() instanceof ItemCelestialCrystal ||
+-                    stack.getItem() instanceof ItemTunedCelestialCrystal) ?
+-                    CrystalProperties.MAX_SIZE_CELESTIAL : CrystalProperties.MAX_SIZE_ROCK;
+-            int grow = rand.nextInt(90) + 40;
+-            max = Math.min(prop.getSize() + grow, max);
+-            CrystalProperties.applyCrystalProperties(stack,
+-                    new CrystalProperties(max, prop.getPurity(), prop.getCollectiveCapability()));
             if(Config.canCrystalGrowthYieldDuplicates && prop.getSize() >= max && rand.nextInt(6) == 0) {
                 ItemStack newStack = (stack.getItem() instanceof ItemCelestialCrystal ||
                         stack.getItem() instanceof ItemTunedCelestialCrystal) ?
@@ -105,8 +111,7 @@ public class EntityCrystal extends EntityItemHighlighted implements EntityStarli
                         rand.nextInt(100) + 20,
                         Math.min(prop.getPurity() + rand.nextInt(10), 100),
                         rand.nextInt(40) + 30,
-                        0,
-                         prop.getSizeOverride());
+                        0);
                 CrystalProperties.applyCrystalProperties(newStack, newProp);
                 ItemUtils.dropItemNaturally(world, posX, posY, posZ, newStack);
                 CrystalProperties.applyCrystalProperties(stack,
